@@ -1,0 +1,13 @@
+I'm following along and it seems NYC has converted all their data to parquet format as of May 2022. So unless you want to convert the parquet to csv to follow along, you need to do a slightly different method than shown in the video. The to_sql() method has a chunksize option, but you loss the nice insert times as seen in the video. Your computer will freeze up for a bit then it will return a number.
+
+First pip install pyarrow.
+
+Then convert the parquet to pandas:
+import pyarrow.parquet as pq
+trips = pq.read_table('yellow_tripdata_2021-01.parquet')
+df = trips.to_pandas()
+
+Finally, run this command and wait. It will take awhile then return a number when it is finished.
+df.to_sql(name='yellow_taxi_data', con=engine, if_exists='replace', chunksize=100000)
+
+What I did was simply read the parquet file with pandas and export the dataframe to csv. Also a viable option I believe.
